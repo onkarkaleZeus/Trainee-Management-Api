@@ -3,6 +3,9 @@
 ## Technology Used
 C#, .NET, Redis, RabbitMQ, MySQL
 
+## Architecture
+<img width="1441" height="793" alt="workflow_diagram" src="https://excalidraw.framalab.org/#json=01KWCAK8T3S6872DHN8NSKVM1F,06DrpgwKRgKtvmDPQtWZQw" />
+
 ## Project structure
 
 ```text
