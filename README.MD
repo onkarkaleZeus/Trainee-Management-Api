@@ -4,7 +4,7 @@
 C#, .NET, Redis, RabbitMQ, MySQL
 
 ## Architecture
-<img width="1441" height="793" alt="workflow_diagram" src="https://excalidraw.framalab.org/#json=01KWCAK8T3S6872DHN8NSKVM1F,06DrpgwKRgKtvmDPQtWZQw" />
+<img width="1315" height="645" alt="Image" src="https://github.com/user-attachments/assets/360b41c7-44e5-4b11-9c5f-6ced6a130066" />
 
 ## Project structure
 
