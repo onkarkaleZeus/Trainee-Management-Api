@@ -3,8 +3,6 @@
 ## Technology Used
 C#, .NET, Redis, RabbitMQ, MySQL
 
-![Architecture](workflow.png)
-
 ## Project structure
 
 ```text
