@@ -47,6 +47,10 @@ builder.Services.Configure<FileStorageSettings>(
     builder.Configuration.GetSection("FileStorage")
 );
 
+builder.Services.Configure<SeedSettings>(
+    builder.Configuration.GetSection("Seed")
+);
+
 builder.Services.Configure<RedisSettings>(
     builder.Configuration.GetSection("Redis")
 );
