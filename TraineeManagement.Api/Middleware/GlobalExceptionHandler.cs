@@ -24,6 +24,7 @@ public class GlobalExceptionHandler(
         var (statusCode, title) = exception switch
         {
             UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized"),
+            AccessForbiddenException => (StatusCodes.Status403Forbidden, "Unauthorized to access the resource"),
             KeyNotFoundException => (StatusCodes.Status404NotFound, "Resource Not Found"),
             FileNotFoundException => (StatusCodes.Status404NotFound, "Resource File Not Found"),
             FileTooLargeException => (StatusCodes.Status413PayloadTooLarge, "Payload exceeds threshold limit"),

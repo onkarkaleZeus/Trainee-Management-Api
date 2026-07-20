@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using TraineeManagement.Api.DTOs.SubmissionFilesDto;
 
 namespace TraineeManagement.Api.Interfaces
@@ -8,7 +9,7 @@ namespace TraineeManagement.Api.Interfaces
 
         Task<SubmissionFileResponse> UploadFile(int submissionId, IFormFile formFile, int userId);
 
-        Task<FileDownloadResponse> DownloadFile(int id);
+        Task<FileDownloadResponse> DownloadFile(int id, ClaimsPrincipal User);
 
         Task DeleteFile(int id);
     }

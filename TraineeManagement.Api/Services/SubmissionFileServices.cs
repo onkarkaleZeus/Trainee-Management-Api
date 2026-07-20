@@ -12,6 +12,9 @@ using System.Text.RegularExpressions;
 using Codeuctivity;
 using Microsoft.Extensions.Options;
 using TraineeManagement.Api.Exceptions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using TraineeManagement.Api.Utils;
 
 namespace TraineeManagement.Api.Services
 {
@@ -24,7 +27,6 @@ namespace TraineeManagement.Api.Services
         private readonly FileStorageSettings _settings;
         private readonly ILogger<SubmissionFileServices> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
 
         public SubmissionFileServices(
             AppDbContext context,
@@ -124,8 +126,8 @@ namespace TraineeManagement.Api.Services
             var savedMetadata = await _context.SubmissionFiles.FindAsync(metadata.Id) ??
                 throw new Exception($"Error while saving metadata for file {metadata.Id}");
 
-             _logger.LogInformation("File Uploaded successfully with the following metadata: ID: {FileId}, Name: {FileName}, Size: {FileSize} bytes, ContentType: {ContentType}, CreatedDate: {CreatedDate}", metadata.Id, metadata.OriginalFileName, metadata.FileSize, metadata.ContentType, metadata.CreatedAt);
-             
+            _logger.LogInformation("File Uploaded successfully with the following metadata: ID: {FileId}, Name: {FileName}, Size: {FileSize} bytes, ContentType: {ContentType}, CreatedDate: {CreatedDate}", metadata.Id, metadata.OriginalFileName, metadata.FileSize, metadata.ContentType, metadata.CreatedAt);
+
             // adding RabbitMQ message queue
             var message = new SubmissionProcessingRequested
             {
@@ -174,10 +176,21 @@ namespace TraineeManagement.Api.Services
             };
         }
 
-        public async Task<FileDownloadResponse> DownloadFile(int id)
+        public async Task<FileDownloadResponse> DownloadFile(int id, ClaimsPrincipal User)
         {
-            var submissionFile = await _context.SubmissionFiles.FindAsync(id) ??
+            int Id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            string role = User.FindFirstValue(ClaimTypes.Role) ?? "";
+
+            var submissionFile = await _context.SubmissionFiles
+                                .Include(x => x.User)
+                                .FirstOrDefaultAsync(x => x.Id == id) ??
+
                 throw new KeyNotFoundException("File Resource not found");
+
+            if (submissionFile.UserId != Id || !AccessDefination.AllowedRolesToDownload.Contains(role))
+            {
+                throw new AccessForbiddenException("Access Denied to download the file");
+            }
 
             var exists = await _service.ExistsAsync(submissionFile.GeneratedFileName);
             if (!exists)

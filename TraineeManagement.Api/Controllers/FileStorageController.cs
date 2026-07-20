@@ -30,7 +30,8 @@ namespace TraineeManagement.Api.Controllers
         [HttpGet("{id:int}/download")]
         public async Task<ActionResult<FileDownloadResponse>> DownloadFile(int id)
         {
-            var file = await _service.DownloadFile(id);
+
+            var file = await _service.DownloadFile(id, User);
 
             return File(
                 file.Stream,
