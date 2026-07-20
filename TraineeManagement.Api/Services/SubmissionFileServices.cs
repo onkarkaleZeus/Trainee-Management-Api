@@ -178,7 +178,7 @@ namespace TraineeManagement.Api.Services
 
         public async Task<FileDownloadResponse> DownloadFile(int id, ClaimsPrincipal User)
         {
-            int Id = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             string role = User.FindFirstValue(ClaimTypes.Role) ?? "";
 
             var submissionFile = await _context.SubmissionFiles
@@ -187,7 +187,7 @@ namespace TraineeManagement.Api.Services
 
                 throw new KeyNotFoundException("File Resource not found");
 
-            if (submissionFile.UserId != Id || !AccessDefination.AllowedRolesToDownload.Contains(role))
+            if (submissionFile.UserId != userId && !AccessDefination.AllowedRolesToDownload.Contains(role))
             {
                 throw new AccessForbiddenException("Access Denied to download the file");
             }
