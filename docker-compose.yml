@@ -1,28 +1,4 @@
-# services:
-#   redis:
-#     image: docker-registry-002.zeuslearning.com/zeuslearning/redis:7-alpine
-#     container_name: trainee-management-redis
-#     ports:
-#       - "6379:6379"
-#     volumes:
-#       - redis_data:/data
-  
-#   rabbitmq:
-#     image: docker-registry-002.zeuslearning.com/zeuslearning/rabbitmq:4.0.9-management
-#     container_name: rabbitmq
-#     ports:
-#     - "5672:5672"
-#     - "15672:15672"
-#     environment:
-#       RABBITMQ_DEFAULT_USER: guest
-#       RABBITMQ_DEFAULT_PASS: guest
-#     volumes:
-#     - rabbitmq_data:/var/lib/rabbitmq
-#     restart: unless-stopped
- 
-# volumes:
-#   redis_data:
-#   rabbitmq_data:
+
 
 services:
   redis:
@@ -47,9 +23,9 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST}
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "check_running"]
       interval: 10s
@@ -65,7 +41,7 @@ services:
     image: docker-registry-002.zeuslearning.com/zeuslearning/mysql
     container_name: mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pRoot@123"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_ROOT_USERNAME}", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -73,8 +49,8 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Root@123
-      MYSQL_DATABASE: trainee_management_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql-data:/var/lib/mysql
 
